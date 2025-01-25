@@ -1,0 +1,19 @@
+.popular-movies {
+  text-align: center;
+  margin-bottom: 80px;
+ 
+}
+
+.movies-grid {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: nowrap; /* Ensure cards stay in one row */
+  overflow-x: scroll; /* Allow horizontal scrolling */
+  padding: 10px;
+}
+
+.popular-movies h2 {
+  margin-bottom: 50px;
+}
+
+

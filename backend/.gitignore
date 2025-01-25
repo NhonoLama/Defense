@@ -1,0 +1,10 @@
+node_modules
+tfdf_env
+
+# Ignore Keras model files
+*.h5
+*.keras
+
+# Ignore Pickle files
+*.pkl
+*.pickle

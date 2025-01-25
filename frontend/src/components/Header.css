@@ -1,0 +1,78 @@
+/* Existing styles */
+.header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 800px;
+  padding: 10px;
+  background-color: #111;
+  color: #fff;
+}
+
+.logoimg {
+  margin-top: 10px;
+  width: 100px;
+}
+
+nav ul {
+  list-style: none;
+  display: flex;
+  gap: 20px;
+}
+
+nav li {
+  cursor: pointer;
+}
+
+.fa-search {
+  font-size: 18px;
+}
+
+/* New styles for the user profile icon and dropdown */
+.user-profile {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.profile-icon {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+.profile-img {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 40px; /* Adjust as needed */
+  right: 0;
+  background-color: white;
+  border: 1px solid #ccc;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 5px;
+  width: 150px;
+  padding: 10px;
+  display: none;
+}
+
+.dropdown-item {
+  display: block;
+  padding: 8px 0;
+  text-decoration: none;
+  color: black;
+}
+
+.dropdown-item:hover {
+  background-color: #f1f1f1;
+}
+
+/* Display dropdown when it is open */
+.user-profile .dropdown-menu.show {
+  display: block;
+}

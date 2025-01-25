@@ -1,0 +1,70 @@
+.searchSec {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  
+}
+
+.searchSec input[type="text"] {
+  font-family: Arial, sans-serif;
+  font-size: 18px;
+  padding: 10px;
+  border: none;
+  border-radius: 10px;
+  background-color: #191313;
+  width: 300px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* added box-shadow */
+  transition: background-color 0.3s ease; /* added transition */
+}
+
+.searchSec input[type="text"]:focus {
+  background-color: #333; /* added focus state */
+}
+
+.search-results {
+  margin-top: 20px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+
+.searchSec button {
+  margin-left: 20px;
+  padding: 12px 25px;
+  font-size: 18px;
+  color: #ffffff;
+  background-color: #007bff;
+  border: none;
+  border-radius: 25px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.searchSec button:hover {
+  background-color: #0056b3;
+  transform: scale(1.05);
+}
+
+.searchSec button:active {
+  transform: scale(0.98);
+}
+
+.error {
+  color: red;
+  margin-top: 10px;
+  padding: 10px;
+  border-radius: 5px;
+  width: 300px; /* Adjust to match the width of input */
+  text-align: center; /* Center align the error message */
+}
+
+@media (max-width: 768px) {
+  .searchSec {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .searchSec input[type="text"] {
+    box-shadow: none; /* removed box-shadow on smaller screens */
+  }
+}

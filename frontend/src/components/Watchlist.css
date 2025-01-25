@@ -1,0 +1,118 @@
+/* General container for the watchlist page */
+
+.watchlist-container {
+  max-width: 1200px;
+  margin: 20px;
+  padding: 20px;
+  background-color: #f8f9fa;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+}
+
+.empty{
+  min-height: 60vh;
+  padding-top: 100px;
+}
+
+/* Align watchlist title to the left */
+.watchlist-container h1 {
+  text-align: center;
+  font-size: 2rem;
+  color: #343a40;
+  margin-bottom: 20px;
+}
+
+/* Movie horizontal layout */
+.watchlist-movies {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: flex-start; /* Align movies to the left */
+}
+
+/* Individual movie item styling */
+.movie-item {
+  background-color: #ffffff;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s, box-shadow 0.3s;
+  width: 250px; /* Adjust for horizontal alignment */
+  text-align: center;
+}
+
+.movie-item:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
+
+.movie-item img {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.movie-item h2 {
+  font-size: 1.2rem;
+  margin: 10px 0;
+  color: #333;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.movie-item p {
+  font-size: 0.9rem;
+  color: #777;
+  margin-bottom: 10px;
+}
+
+/* Remove button styling */
+.remove-from-watchlist-btn {
+  background-color: #ff4d4d;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 15px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  margin-bottom: 10px;
+  transition: background-color 0.3s ease;
+}
+
+.remove-from-watchlist-btn:hover {
+  background-color: #e60000;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .watchlist-movies {
+    flex-direction: column; /* Stack movies vertically on smaller screens */
+  }
+
+  .movie-item {
+    width: 100%;
+  }
+}
+
+/* Back-to-home button */
+.back-to-home-btn {
+  position: absolute;
+  top: 10px;
+  right: 20px;
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.back-to-home-btn:hover {
+  background-color: #0056b3;
+}
