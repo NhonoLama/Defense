@@ -1,0 +1,17 @@
+# env
+.env
+.venv/
+.vs/
+
+# python
+**/venv/
+**/.venv/
+__pycache__/
+*.pyc
+
+# node
+**/node_modules/
+**/.next/
+
+# misc
+.DS_Store

@@ -4,6 +4,7 @@ import bodyParser from "body-parser";
 import cors from "cors";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import cookieParser from "cookie-parser";
 import dotenv from "dotenv";
 import Movie from "./Models/Movie.js";
 import User from "./Models/User.js";
@@ -17,7 +18,13 @@ dotenv.config();
 // Initialize Express app
 const app = express();
 app.use(bodyParser.json());
-app.use(cors());
+app.use(cookieParser());
+app.use(
+  cors({
+    origin: "http://localhost:3000", // your Next.js dev URL
+    credentials: true, // allows cookies to be sent cross-origin
+  }),
+);
 
 // Connect to MongoDB
 mongoose.connect("mongodb://localhost:27017/CineMood");
@@ -31,7 +38,10 @@ if (!JWT_SECRET) {
 
 // Middleware to verify JWT
 const authenticateToken = (req, res, next) => {
-  const token = req.headers.authorization?.split(" ")[1];
+  // Read from cookie first (new), fall back to Authorization header (old)
+  // This lets both patterns work during the transition period
+  const token = req.cookies?.token || req.headers.authorization?.split(" ")[1];
+
   if (!token)
     return res.status(401).json({ error: "Access denied. No token provided." });
 
@@ -87,12 +97,23 @@ app.post("/api/login", async (req, res) => {
       return res.status(401).json({ error: "Invalid email or password" });
 
     const token = jwt.sign({ userId: user._id }, JWT_SECRET, {
-      expiresIn: "1h",
+      expiresIn: "7d", // Token expires in 7 days
     });
+
+    // Set httpOnly cookie — JS cannot read this, only sent automatically by browser
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production", // HTTPS only in prod, HTTP ok in dev
+      sameSite: "lax",
+      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days in milliseconds
+    });
+
+    // Still send JSON response — the frontend needs to know login succeeded
+    // but no longer needs the token value itself
     res.json({
       message: "Login successful",
-      token,
-      profileImage: user.profileImage, // Include profile image in response
+      profileImage: user.profileImage,
+      username: user.username,
     });
   } catch (error) {
     console.error("Error during login:", error);
@@ -266,7 +287,7 @@ app.post("/api/watchlist", authenticateToken, async (req, res) => {
 app.get("/api/watchlist", authenticateToken, async (req, res) => {
   try {
     const user = await User.findById(req.user.userId).populate(
-      "watchlist.movieId"
+      "watchlist.movieId",
     );
     if (!user) return res.status(404).json({ error: "User not found" });
 
@@ -286,7 +307,7 @@ app.delete("/api/watchlist/:movieId", authenticateToken, async (req, res) => {
 
     // Filter out the movie from the watchlist
     user.watchlist = user.watchlist.filter(
-      (item) => item.movieId.toString() !== movieId
+      (item) => item.movieId.toString() !== movieId,
     );
     await user.save();
 
@@ -363,6 +384,15 @@ app.post("/predict", async (req, res) => {
     console.error("Error in Node.js server:", error);
     res.status(500).send("Error predicting with Flask");
   }
+});
+
+app.post("/api/logout", (req, res) => {
+  res.clearCookie("token", {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "lax",
+  });
+  res.json({ message: "Logged out successfully" });
 });
 
 // Start server
