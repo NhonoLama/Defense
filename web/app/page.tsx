@@ -1,7 +1,7 @@
-import Header from "@/components/Header";
-import Hero from "@/components/Hero";
-import SlideComp from "@/components/SlideComp";
-import Footer from "@/components/Footer";
+import Header from "@/app/components/Header";
+import Hero from "@/app/components/Hero";
+import SlideComp from "@/app/components/SlideComp";
+import Footer from "@/app/components/Footer";
 
 export default function Home() {
   return (

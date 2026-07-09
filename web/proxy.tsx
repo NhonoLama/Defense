@@ -6,7 +6,7 @@ const protectedRoutes = ["/watchlist"];
 // Routes only for unauthenticated users (redirect to home if already logged in)
 const authRoutes = ["/login", "/register"];
 
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
   const token = request.cookies.get("token")?.value;
   const { pathname } = request.nextUrl;
 

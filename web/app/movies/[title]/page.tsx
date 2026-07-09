@@ -1,7 +1,7 @@
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
-import MovieDetail from "@/components/MovieDetail";
-import CriticReview from "@/components/CriticReview";
+import Header from "@/app/components/Header";
+import Footer from "@/app/components/Footer";
+import MovieDetail from "@/app/components/MovieDetail";
+import CriticReview from "@/app/components/CriticReview";
 
 export default async function MovieDetailsPage({
   params,

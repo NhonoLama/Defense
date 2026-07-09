@@ -16,36 +16,55 @@ export default function MovieCard({ movie }: { movie: Movie }) {
   const [loading, setLoading] = useState(false);
 
   const handleClick = async () => {
+    if (loading) return; // guard against double-click / re-entry
     setLoading(true);
+
     try {
       // Check if movie exists in DB
       const checkRes = await fetch(
         `${process.env.NEXT_PUBLIC_API_URL}/movies/check/${encodeURIComponent(movie.title)}`,
       );
+      if (!checkRes.ok) {
+        throw new Error(`Check failed with status ${checkRes.status}`);
+      }
       const checkData = await checkRes.json();
 
-      // Add to DB if it doesn't exist yet
+      // Add to DB if it doesn't exist yet, and WAIT for it to actually land
       if (!checkData.exists) {
-        await fetch(`${process.env.NEXT_PUBLIC_API_URL}/movies/add`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            title: movie.title,
-            poster_path: movie.poster_path,
-            release_date: movie.release_date,
-            overview: movie.overview,
-          }),
-        });
+        const addRes = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/movies/add`,
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              title: movie.title,
+              poster_path: movie.poster_path,
+              release_date: movie.release_date,
+              overview: movie.overview,
+            }),
+          },
+        );
+
+        // 400 here likely just means another request beat us to it (race) — that's fine.
+        // Anything else is a real failure and we shouldn't navigate yet.
+        if (!addRes.ok && addRes.status !== 400) {
+          throw new Error(`Add failed with status ${addRes.status}`);
+        }
       }
 
-      // Scrape comments
-      await fetch(`${process.env.NEXT_PUBLIC_API_URL}/movies/scrape-comments`, {
+      // Navigate now — the movie is guaranteed to exist in Mongo at this point.
+      router.push(`/movies/${encodeURIComponent(movie.title)}`);
+
+      // Fire-and-forget the review scrape in the background.
+      // Don't await it — it can take 10+ seconds (Puppeteer launch, RT page load,
+      // multiple "load more" clicks) and shouldn't block navigation.
+      fetch(`${process.env.NEXT_PUBLIC_API_URL}/movies/scrape-comments`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ title: movie.title }),
+      }).catch((err) => {
+        console.error("Background scrape failed:", err);
       });
-
-      router.push(`/movies/${encodeURIComponent(movie.title)}`);
     } catch (err) {
       console.error("Error handling movie click:", err);
       setLoading(false);

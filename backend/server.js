@@ -139,18 +139,13 @@ app.post("/save-movies", async (req, res) => {
 
     for (const movie of movies) {
       const existingMovie = await Movie.findOne({ title: movie.title });
-
       if (existingMovie) {
-        return res.status(400).json({
-          error: `Movie "${movie.title}" already exists in the database.`,
-        });
+        console.log(`Movie "${movie.title}" already exists, skipping.`);
+        continue; // ← skip this one, process the rest
       }
-
       const newMovie = new Movie(movie);
       await newMovie.save();
-      console.log(`Movie "${movie.title}" added to the database.`);
     }
-
     res.status(200).send("Movies processed successfully.");
   } catch (error) {
     console.error("Error processing movies:", error);
